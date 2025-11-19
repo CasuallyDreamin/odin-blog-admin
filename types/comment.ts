@@ -5,4 +5,5 @@ export interface Comment {
   authorEmail?: string;
   body: string;
   createdAt: string;
+  published: boolean;
 }

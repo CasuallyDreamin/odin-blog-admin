@@ -1,0 +1,55 @@
+'use client';
+
+interface FormFieldProps {
+  label: string;
+  type?: 'text' | 'email' | 'textarea' | 'number' | 'password' | 'select';
+  value: string | number;
+  placeholder?: string;
+  onChange: (value: string) => void;
+  required?: boolean;
+  options?: string[];
+}
+
+export default function FormField({
+  label,
+  type = 'text',
+  value,
+  placeholder,
+  onChange,
+  required = false,
+  options = [],
+}: FormFieldProps) {
+  return (
+    <div className="mb-4 flex flex-col">
+      <label className="mb-1 font-semibold">{label}{required && '*'}</label>
+
+      {type === 'textarea' ? (
+        <textarea
+          className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-cyan-400"
+          placeholder={placeholder}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        />
+      ) : type === 'select' ? (
+        <select
+          className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-cyan-400"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        >
+          <option value="">Select...</option>
+          {options.map((opt) => (
+            <option key={opt} value={opt}>{opt}</option>
+          ))}
+        </select>
+      ) : (
+        <input
+          type={type}
+          placeholder={placeholder}
+          className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-cyan-400"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        />
+      )}
+    </div>
+  );
+}
