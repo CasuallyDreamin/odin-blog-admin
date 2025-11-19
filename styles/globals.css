@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700&family=Rajdhani:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-primary: oklch(0.8 0.18 190);
+  --color-bg: oklch(0.15 0.02 260);
+  --color-surface: #171717;
+  --color-border: rgba(0,200,250);
+  --color-text-muted: oklch(0.7 0.02 260);
+  
+  --font-header: 'Tron', sans-serif;
+  --font-titles: 'Orbitron', sans-serif;
+  --font-body: "Rajdhani", sans-serif;
+  --breakpoint-xl: 64rem;
+}
+
+
+html, body {
+  font-family: var(--font-body);
+  overflow-y:visible;
+  scrollbar-gutter: stable;
+  @apply bg-neutral-950 text-neutral-100;
+
+}
+
+.section-title,
+.post-title, 
+.article-title,
+label{
+  font-family: var(--font-titles);
+  letter-spacing: 0.08em;
+}
+
+.post-preview,
+.post-meta,
+.quote-text,
+.hero-subtitle {
+  font-family: var(--font-body);
+  letter-spacing: 0.02em;
+}
+
+@font-face {
+  font-family: 'Tron';
+  src: url("../public/fonts/Tr2n.ttf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
