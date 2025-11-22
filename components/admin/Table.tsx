@@ -2,44 +2,66 @@
 
 import React from 'react';
 
-interface Column<T> {
+export interface TableColumn<T> {
+  key: keyof T | string;
   label: string;
-  key: keyof T | ((item: T) => React.ReactNode);
+  width?: string;
+  render?: (row: T) => React.ReactNode;
 }
 
 interface TableProps<T> {
-  columns: Column<T>[];
+  columns: TableColumn<T>[];
   data: T[];
-  onRowClick?: (item: T) => void;
+  onRowClick?: (row: T) => void;
+  actions?: (row: T) => React.ReactNode;
 }
 
-export default function Table<T>({ columns, data, onRowClick }: TableProps<T>) {
+export default function Table<T>({
+  columns,
+  data,
+  onRowClick,
+  actions,
+}: TableProps<T>) {
   return (
-    <table className="w-full table-auto border border-gray-300">
-      <thead>
-        <tr className="bg-gray-100">
-          {columns.map((col) => (
-            <th key={col.label} className="p-2 border-b border-gray-300 text-left">
-              {col.label}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((row, idx) => (
-          <tr
-            key={idx}
-            onClick={() => onRowClick?.(row)}
-            className="hover:bg-gray-50 cursor-pointer"
-          >
-            {columns.map((col) => (
-              <td key={col.label} className="p-2 border-b border-gray-300">
-                {typeof col.key === 'function' ? col.key(row) : (row[col.key] as React.ReactNode)}
-              </td>
+    <div className="overflow-auto border border-neutral-800 rounded">
+      <table className="w-full text-left">
+        <thead className="bg-neutral-900 border-b border-neutral-800">
+          <tr>
+            {columns.map(col => (
+              <th
+                key={String(col.key)}
+                className="px-4 py-2 text-sm font-medium text-gray-300"
+                style={{ width: col.width }}
+              >
+                {col.label}
+              </th>
             ))}
+            {actions && <th className="px-4 py-2 text-sm">Actions</th>}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+
+        <tbody>
+          {data.map((row, i) => (
+            <tr
+              key={i}
+              className="border-b border-neutral-800 hover:bg-neutral-800/40 transition cursor-pointer"
+              onClick={() => onRowClick?.(row)}
+            >
+              {columns.map(col => (
+                <td key={String(col.key)} className="px-4 py-2 text-sm">
+                  {col.render ? col.render(row) : (row as any)[col.key]}
+                </td>
+              ))}
+
+              {actions && (
+                <td className="px-4 py-2 text-sm">
+                  {actions(row)}
+                </td>
+              )}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
