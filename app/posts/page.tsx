@@ -26,6 +26,7 @@ export default function PostsPage() {
     setLoading(true);
 
     try {
+      // Assuming fetchPosts returns { data: Post[], totalPages: number }
       const res = await fetchPosts({ page, search, limit: 10 });
 
       setPosts(res.data);
@@ -100,17 +101,19 @@ export default function PostsPage() {
       <Table<Post>
         columns={columns}
         data={posts}
+        // Redirecting on row click to edit page
+        onRowClick={(row) => row.slug ? window.location.href = `/posts/edit/${row.slug}` : null}
         actions={(row) => (
           <div className="flex gap-3">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                console.log('Edit', row.slug);
-              }}
+            {/* 🎯 FIX: Changed button to Link and added dynamic path */}
+            <Link
+              href={`/posts/edit/${row.slug}`}
               className="text-cyan-400 hover:text-cyan-300"
+              // Stop propagation to prevent the default row click handler from firing
+              onClick={(e) => e.stopPropagation()} 
             >
               Edit
-            </button>
+            </Link>
 
             <button
               onClick={(e) => {

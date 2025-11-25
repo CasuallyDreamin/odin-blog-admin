@@ -41,7 +41,20 @@ export async function fetchPosts({ page, limit, search }: any) {
     totalPages: Math.ceil((json.total ?? 0) / limit),
   };
 }
+export async function getPostById(id: string) {
+  const res = await api.get(`/posts/${id}`);
+  return res.data as Post;
+}
 
+export async function  getPostBySlug(slug: string) {
+  const res = await api.get(`/posts/${slug}`);
+  return res.data as Post;
+}
+
+export async function updatePost(id: string, data: Partial<CreatePostPayload>) {
+  const res = await api.put(`/posts/${id}`, data);
+  return res.data as Post;
+}
 
 export async function deletePost(id: string) {
   return api.delete(`/posts/${id}`);
