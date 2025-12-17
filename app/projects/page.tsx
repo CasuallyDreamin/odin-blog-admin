@@ -7,12 +7,12 @@ import Pagination from '@/components/admin/Pagination';
 import Badge from '@/components/admin/Badge';
 import StatusDot from '@/components/admin/StatusDot';
 import ConfirmDeleteModal from '@/components/admin/ConfirmDeleteModal';
-import { fetchPosts, deletePost } from '@/lib/postsService';
-import { Post } from '@/types/post';
+import { fetchProjects, deleteProject } from '@/lib/projectsService';
+import { Project } from '@/types/project';
 import Link from "next/link";
 
-export default function PostsPage() {
-  const [posts, setPosts] = useState<Post[]>([]);
+export default function ProjectsPage() {
+  const [projects, setProjects] = useState<Project[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
@@ -20,36 +20,30 @@ export default function PostsPage() {
 
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  async function loadPosts() {
+  async function loadProjects() {
     setLoading(true);
-
     try {
-      const res = await fetchPosts({ page, search, limit: 10 });
-
-      setPosts(res.data);
+      const res = await fetchProjects({ page, search, limit: 10 });
+      setProjects(res.data);
       setTotalPages(res.totalPages);
     } catch (err) {
-      console.error('Failed to load posts', err);
+      console.error('Failed to load projects', err);
     }
-
     setLoading(false);
   }
 
   useEffect(() => {
-    loadPosts();
+    loadProjects();
   }, [page, search]);
 
-  const columns: TableColumn<Post>[] = [
-    {
-      key: 'title',
-      label: 'Title',
-    },
+  const columns: TableColumn<Project>[] = [
+    { key: 'title', label: 'Title' },
     {
       key: 'categories',
       label: 'Categories',
       render: (p) =>
         p.categories?.length
-          ? p.categories.map((c) => <Badge key={c.id}>{c.name}</Badge>)
+          ? p.categories.map(c => <Badge key={c.id}>{c.name}</Badge>)
           : '—',
     },
     {
@@ -68,15 +62,14 @@ export default function PostsPage() {
     {
       key: 'createdAt',
       label: 'Created',
-      render: (p) =>
-        p.createdAt ? new Date(p.createdAt).toLocaleDateString() : '—',
+      render: (p) => new Date(p.createdAt).toLocaleDateString(),
     },
   ];
 
   return (
     <div className="flex flex-col gap-6">
       <Topbar
-        title="Posts"
+        title="Projects"
         searchTerm={search}
         onSearchChange={(val) => {
           setSearch(val);
@@ -84,32 +77,27 @@ export default function PostsPage() {
         }}
         actions={
           <Link
-            href="/posts/new"
+            href="/projects/new"
             className="px-3 py-1 rounded bg-cyan-600 hover:bg-cyan-500 text-white text-sm"
           >
-            + Create Post
+            + Create Project
           </Link>
         }
       />
 
-      {/* Table */}
-      <Table<Post>
+      <Table<Project>
         columns={columns}
-        data={posts}
-        // Redirecting on row click to edit page
-        onRowClick={(row) => row.slug ? window.location.href = `/posts/edit/${row.slug}` : null}
+        data={projects}
+        onRowClick={(row) => row.slug && (window.location.href = `/projects/edit/${row.slug}`)}
         actions={(row) => (
           <div className="flex gap-3">
-            {/* 🎯 FIX: Changed button to Link and added dynamic path */}
             <Link
-              href={`/posts/edit/${row.slug}`}
+              href={`/projects/edit/${row.slug}`}
               className="text-cyan-400 hover:text-cyan-300"
-              // Stop propagation to prevent the default row click handler from firing
-              onClick={(e) => e.stopPropagation()} 
+              onClick={(e) => e.stopPropagation()}
             >
               Edit
             </Link>
-
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -123,21 +111,17 @@ export default function PostsPage() {
         )}
       />
 
-      <Pagination 
-        page={page}
-        totalPages={totalPages}
-        onChange={setPage} />
+      <Pagination page={page} totalPages={totalPages} onChange={setPage} />
 
       <ConfirmDeleteModal
         open={deleteId !== null}
-        itemName="post"
+        itemName="project"
         onCancel={() => setDeleteId(null)}
         onConfirm={async () => {
           if (!deleteId) return;
-          console.log("Delete ID: ", deleteId);
-          await deletePost(deleteId);
+          await deleteProject(deleteId);
           setDeleteId(null);
-          loadPosts();
+          loadProjects();
         }}
       />
     </div>

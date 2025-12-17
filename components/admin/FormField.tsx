@@ -2,7 +2,7 @@
 
 interface FormFieldProps {
   label: string;
-  type?: 'text' | 'email' | 'textarea' | 'number' | 'password' | 'select';
+  type?: 'text' | 'email' | 'textarea' | 'number' | 'password' | 'select' | 'url';
   value: string | number;
   placeholder?: string;
   onChange: (value: string) => void;
@@ -31,16 +31,16 @@ export default function FormField({
           onChange={(e) => onChange(e.target.value)}
         />
       ) : type === 'select' ? (
-        <select
-          className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-cyan-400"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
+      <select
+            className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-cyan-400 text-white"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
         >
-          <option value="">Select...</option>
-          {options.map((opt) => (
-            <option key={opt} value={opt}>{opt}</option>
-          ))}
-        </select>
+            <option value="" className="text-black">Select...</option>
+            {options.map((opt) => (
+                <option className="text-black" key={opt} value={opt}>{opt}</option>
+            ))}
+      </select>
       ) : (
         <input
           type={type}

@@ -1,9 +1,8 @@
 export interface Comment {
-  id: string;
-  postId: string;
-  author: string;
-  authorEmail?: string;
-  body: string;
-  createdAt: string;
-  published: boolean;
+    id: string;
+    author: string;
+    authorEmail: string | null;
+    body: string;
+    createdAt: string;
+    postId: string;
 }

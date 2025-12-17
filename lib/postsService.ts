@@ -1,6 +1,7 @@
 import api from './api';
 import { Post } from '@/types/post';
 
+
 export interface FetchPostsParams {
   page?: number;
   limit?: number;
@@ -22,6 +23,11 @@ export interface CreatePostPayload {
   published?: boolean;
   categoryIds?: string[];
   tagIds?: string[];
+}
+
+export interface Tag {
+  id: string;
+  name: string;
 }
 
 export async function createPost(data: CreatePostPayload) {
@@ -58,4 +64,15 @@ export async function updatePost(id: string, data: Partial<CreatePostPayload>) {
 
 export async function deletePost(id: string) {
   return api.delete(`/posts/${id}`);
+}
+
+
+export async function fetchTags(): Promise<Tag[]> {
+  try {
+    const res = await api.get('/tags');
+    return res.data.tags ?? [];
+  } catch (err) {
+    console.error('Failed to fetch tags', err);
+    return [];
+  }
 }

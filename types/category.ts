@@ -4,4 +4,5 @@ export interface Category {
   description?: string;
   createdAt?: string;
   updatedAt?: string;
+  postCount?: number;
 }

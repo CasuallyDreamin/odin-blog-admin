@@ -36,31 +36,50 @@ export default function Modal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          // Click outside listener to close the modal
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              onClose();
+            }
+          }}
         >
           <motion.div
-            className="bg-white rounded-lg w-[90%] max-w-lg p-6"
+            className="rounded-xl shadow-2xl w-[90%] max-w-lg p-6"
             initial={{ scale: 0.8 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0.8 }}
           >
-            {title && <h2 className="text-xl font-semibold mb-4">{title}</h2>}
-            <div className="mb-4">{children}</div>
-            <div className="flex justify-end gap-2">
-              <button
-                className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400"
-                onClick={onClose}
-              >
-                {cancelLabel}
-              </button>
-              {onConfirm && (
+            {(title) && (
+              <div className={`flex items-start justify-between ${title ? 'mb-4' : ''}`}>
+                {title && <h2 className="text-xl font-semibold">{title}</h2>}
                 <button
-                  className="px-4 py-2 rounded bg-cyan-500 text-white hover:bg-cyan-600"
+                  onClick={onClose}
+                  className="text-gray-400 hover:text-gray-600 ml-auto p-1 rounded-full transition text-2xl leading-none"
+                  aria-label="Close modal"
+                > 
+                  &times;
+                </button>
+              </div>
+            )}
+            
+            <div className="mb-4">{children}</div>
+
+            {onConfirm && (
+              <div className="flex justify-end gap-2">
+                <button
+                  className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-sm"
+                  onClick={onClose}
+                >
+                  {cancelLabel}
+                </button>
+                <button
+                  className="px-4 py-2 rounded bg-cyan-600 text-white hover:bg-cyan-700 text-sm"
                   onClick={onConfirm}
                 >
                   {confirmLabel}
                 </button>
-              )}
-            </div>
+              </div>
+            )}
           </motion.div>
         </motion.div>
       )}

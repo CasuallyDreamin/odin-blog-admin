@@ -19,6 +19,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     { label: 'Posts', href: '/posts', icon: null },
     { label: 'Categories', href: '/categories', icon: null },
     { label: 'Comments', href: '/comments', icon: null },
+    { label: 'Projects', href: '/projects', icon: null },
+    { label: 'Tags', href: '/tags', icon: null },
     { label: 'Settings', href: '/settings', icon: null },
   ];
 

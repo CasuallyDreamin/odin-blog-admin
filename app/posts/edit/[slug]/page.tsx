@@ -155,10 +155,7 @@ export default function EditPostPage() {
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6 bg-neutral-900 text-neutral-100 rounded-lg shadow-2xl">
       <h1 className="text-3xl font-bold text-cyan-400">Edit Post: {title}</h1>
-      {/* ... (rest of the form UI remains the same) */}
       <form onSubmit={handleSubmit} className="space-y-6">
-        
-        {/* Title Input */}
         <input
           className="bg-neutral-800 text-neutral-100 border border-neutral-700 px-4 py-2 rounded-lg w-full text-xl focus:border-cyan-500 transition duration-150"
           placeholder="Post Title..."
@@ -166,8 +163,6 @@ export default function EditPostPage() {
           onChange={(e) => setTitle(e.target.value)}
           disabled={isSubmitting}
         />
-
-        {/* Rich Text Editor */}
         <div className="min-h-[400px]">
             <TextEditor 
               value={content} 
@@ -177,7 +172,6 @@ export default function EditPostPage() {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
-            {/* Publication Status */}
             <div className="flex items-center space-x-3 bg-neutral-800 p-3 rounded-lg border border-neutral-700">
                 <input
                     id="published-checkbox"
@@ -192,7 +186,6 @@ export default function EditPostPage() {
                 </label>
             </div>
 
-            {/* Categories Selection */}
             <div className="col-span-1 bg-neutral-800 p-4 rounded-lg border border-neutral-700">
                 <h3 className="text-xl font-semibold mb-3 text-cyan-300">Categories</h3>
                 <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
@@ -215,7 +208,6 @@ export default function EditPostPage() {
                 </div>
             </div>
 
-            {/* Tags Selection */}
             <div className="col-span-1 bg-neutral-800 p-4 rounded-lg border border-neutral-700">
                 <h3 className="text-xl font-semibold mb-3 text-cyan-300">Tags</h3>
                 <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
@@ -239,7 +231,6 @@ export default function EditPostPage() {
             </div>
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
           disabled={isSubmitting || loading || !postId} 
