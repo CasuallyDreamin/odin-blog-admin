@@ -8,18 +8,10 @@ import TextEditor from '@/components/posts/TextEditor';
 import api from '@/lib/api'; 
 import LoadingSpinner from '@/components/LoadingSpinner';
 import ErrorMessage from '@/components/ErrorMessage';
-
+import { type Post } from '@/types/post'
 // Define types 
 interface Category { id: string; name: string; }
 interface Tag { id: string; name: string; }
-interface Post {
-    id: string; // Internal database ID is critical for update
-    title: string;
-    content: string | null;
-    published: boolean;
-    categories: { id: string; name: string }[];
-    tags: { id: string; name: string }[];
-}
 
 
 export default function EditPostPage() {
@@ -59,7 +51,7 @@ export default function EditPostPage() {
 
       try {
         const postRes = await getPostBySlug(postSlug); 
-        const postData: Post = postRes;
+        const postData: Post  = postRes;
 
         const [categoriesRes, tagsRes] = await Promise.all([
           api.get('/categories'), 

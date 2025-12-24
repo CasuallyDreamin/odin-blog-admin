@@ -5,7 +5,7 @@ export interface Post {
   id: string;
   slug: string;
   title: string;
-  body: string;
+  content: string;
   published: boolean;
   tags: string[];
   categories: Category[];
