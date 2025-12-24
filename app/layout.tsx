@@ -17,9 +17,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const sidebarItems = [
     { label: 'Dashboard', href: '/', icon: null },
     { label: 'Posts', href: '/posts', icon: null },
-    { label: 'Categories', href: '/categories', icon: null },
-    { label: 'Comments', href: '/comments', icon: null },
     { label: 'Projects', href: '/projects', icon: null },
+    { label: 'Thoughts', href: '/thoughts', icon: null },
+    { label: 'Comments', href: '/comments', icon: null },
+    { label: 'Messages', href: '/messages', icon: null },
+    { label: 'Categories', href: '/categories', icon: null },
     { label: 'Tags', href: '/tags', icon: null },
     { label: 'Settings', href: '/settings', icon: null },
   ];
