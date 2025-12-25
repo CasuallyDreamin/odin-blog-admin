@@ -41,9 +41,11 @@ export async function fetchPosts({ page, limit, search }: any) {
   });
 
   const json = res.data;
-
+  const total = json.total ?? 0;
   return {
     data: json.posts ?? [],
+    total: total,
+    page: json.page ?? page,
     totalPages: Math.ceil((json.total ?? 0) / limit),
   };
 }
@@ -70,7 +72,8 @@ export async function deletePost(id: string) {
 export async function fetchTags(): Promise<Tag[]> {
   try {
     const res = await api.get('/tags');
-    return res.data.tags ?? [];
+    const json = res.data;
+    return json.tags ?? [];
   } catch (err) {
     console.error('Failed to fetch tags', err);
     return [];

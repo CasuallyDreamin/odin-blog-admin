@@ -22,3 +22,8 @@ export async function deleteMessage(id: string) {
 export async function markRead(id: string) {
   return api.patch(`/contact/${id}/read`);
 }
+
+export async function fetchUnreadMessagesCount() {
+  const res = await api.get('/contact/unread/count');
+  return res.data.count;
+}

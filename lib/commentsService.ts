@@ -54,3 +54,8 @@ export async function setCommentApprovalStatus(id: string, isApproved: boolean):
   const res = await api.put(`/comments/${id}/status`, { isApproved });
   return res.data as CommentWithPost;
 }
+
+export async function fetchCommentsCount(): Promise<number> {
+  const res = await api.get('/comments/count/pending');
+  return res.data.count;
+}
