@@ -1,0 +1,19 @@
+services:
+  admin-app:
+    networks:
+      - blog-network
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: "http://localhost:5000/api"
+    container_name: sintopia_admin
+    restart: always
+    ports:
+      - "3001:3000"
+    env_file:
+      - .env
+
+networks:
+  blog-network:
+    external: true
