@@ -1,5 +1,4 @@
-'use client';
-
+"use client";
 import { ReactNode } from 'react';
 import Sidebar from '@/components/admin/Sidebar';
 import Topbar from '@/components/admin/Topbar';

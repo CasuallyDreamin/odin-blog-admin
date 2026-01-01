@@ -30,7 +30,7 @@ export default function CommentList({ comments, onUpdate }: CommentListProps) {
 
   const togglePublished = async (c: Comment) => {
     try {
-      const res = await api.patch(`/comments/${c.id}`, { published: !c.published });
+      const res = await api.patch(`/comments/${c.id}`, { isApproved: !c.isApproved });
       const updated = localComments.map(comment =>
         comment.id === c.id ? { ...comment, published: res.data.published } : comment
       );
@@ -58,7 +58,7 @@ export default function CommentList({ comments, onUpdate }: CommentListProps) {
           {localComments.map((c) => (
             <motion.li
               key={c.id}
-              className={`comment-item ${!c.published ? 'comment-unpublished' : ''}`}
+              className={`comment-item ${!c.isApproved ? 'comment-unpublished' : ''}`}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
@@ -80,7 +80,7 @@ export default function CommentList({ comments, onUpdate }: CommentListProps) {
                   className="btn-toggle text-cyan-500 text-sm"
                   onClick={() => togglePublished(c)}
                 >
-                  {c.published ? 'Unpublish' : 'Publish'}
+                  {c.isApproved ? 'Unpublish' : 'Publish'}
                 </button>
               </div>
             </motion.li>

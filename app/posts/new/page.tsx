@@ -6,7 +6,6 @@ import { createPost } from '@/lib/postsService';
 import TextEditor from '@/components/posts/TextEditor';
 import api from '@/lib/api'; 
 
-// Define types for better TypeScript support (assuming this is a TSX file based on your input)
 interface Category {
   id: string;
   name: string;
@@ -21,19 +20,16 @@ interface Tag {
 export default function NewPostPage() {
   const router = useRouter();
   
-  // Post state
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('Enter your post content here...');
   const [published, setPublished] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-  // Lookup data state
   const [availableCategories, setAvailableCategories] = useState<Category[]>([]);
   const [availableTags, setAvailableTags] = useState<Tag[]>([]);
   const [loadingLookups, setLoadingLookups] = useState(true);
 
-  // --- Data Fetching for Tags and Categories ---
   useEffect(() => {
     async function fetchLookups() {
       try {
@@ -60,8 +56,6 @@ export default function NewPostPage() {
     fetchLookups();
   }, []);
 
-  // --- Handlers for Tags and Categories Checkboxes ---
-
   const handleCategoryChange = (categoryId: string, isChecked: boolean) => {
     setSelectedCategories(prev => 
       isChecked 
@@ -79,7 +73,6 @@ export default function NewPostPage() {
   };
 
 
-  // --- Form Submission ---
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -88,7 +81,6 @@ export default function NewPostPage() {
       return;
     }
     
-    // Assuming backend takes an array of strings (IDs)
     const categoryIds = selectedCategories;
     const tagIds = selectedTags;
 

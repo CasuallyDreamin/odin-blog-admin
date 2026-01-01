@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 
 interface ConfirmDeleteModalProps {
+  message?: string;
   open: boolean;
   itemName?: string;
   onCancel: () => void;
@@ -11,6 +12,7 @@ interface ConfirmDeleteModalProps {
 
 export default function ConfirmDeleteModal({
   open,
+  message,
   itemName,
   onCancel,
   onConfirm,

@@ -251,10 +251,9 @@ export default function CommentsPage() {
           />
           
           <Pagination
-            currentPage={page}
+            page={page}
             totalPages={totalPages}
             onChange={setPage}
-            disabled={loading}
           />
         </>
       )}

@@ -1,63 +1,52 @@
+"use client";
+
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { fetchPosts } from '@/lib/postsService';
-import { fetchCommentsCount } from '@/lib/commentsService';
-import { fetchUnreadMessagesCount } from '@/lib/contactService';
 import { fetchTags } from '@/lib/tagsService';
 import { fetchCategories } from '@/lib/categoriesService';
 import { checkApiHealth } from '@/lib/api';
 import { formatRelativeTime } from '@/lib/utils';
 import Badge from '@/components/admin/Badge';
 import StatusDot from '@/components/admin/StatusDot';
+import DashboardStats from '@/components/admin/DashboardStats';
 import { Post } from '@/types/post';
 
-interface DashboardStats {
-  recentPosts: Post[];
-  totalPosts: number;
-  pendingComments: number;
-  unreadMessages: number;
-  totalTags: number;
-  totalCategories: number;
-  health: { online: boolean; latency: number };
-}
+export default function DashboardPage() {
+  const [data, setData] = useState({
+    recentPosts: [] as Post[],
+    totalPosts: 0,
+    totalTags: 0,
+    totalCats: 0,
+    health: { online: false, latency: 0 },
+    loading: true
+  });
 
-async function getDashboardData(): Promise<DashboardStats> {
-  const [posts, comments, messages, tags, categories, health] = await Promise.allSettled([
-    fetchPosts({ limit: 5 }),
-    fetchCommentsCount(),
-    fetchUnreadMessagesCount(),
-    fetchTags({ limit: 1 }),
-    fetchCategories({ limit: 1 }),
-    checkApiHealth()
-  ]);
+  useEffect(() => {
+    async function loadDashboardData() {
+      const [postsRes, tagsRes, catsRes, healthRes] = await Promise.allSettled([
+        fetchPosts({ limit: 5 }),
+        fetchTags({ limit: 1 }),
+        fetchCategories({ limit: 1 }),
+        checkApiHealth()
+      ]);
 
-  return {
-    recentPosts: posts.status === 'fulfilled' ? posts.value.data : [],
-    totalPosts: posts.status === 'fulfilled' ? posts.value.total : 0,
-    pendingComments: comments.status === 'fulfilled' ? comments.value : 0,
-    unreadMessages: messages.status === 'fulfilled' ? messages.value : 0,
-    totalTags: tags.status === 'fulfilled' ? tags.value.total : 0,
-    totalCategories: categories.status === 'fulfilled' ? categories.value.total : 0,
-    health: health.status === 'fulfilled' ? health.value : { online: false, latency: 0 }
-  };
-}
+      setData({
+        recentPosts: postsRes.status === 'fulfilled' ? postsRes.value.data : [],
+        totalPosts: postsRes.status === 'fulfilled' ? postsRes.value.total : 0,
+        totalTags: tagsRes.status === 'fulfilled' ? tagsRes.value.total : 0,
+        totalCats: catsRes.status === 'fulfilled' ? catsRes.value.total : 0,
+        health: healthRes.status === 'fulfilled' ? healthRes.value : { online: false, latency: 0 },
+        loading: false
+      });
+    }
 
-const StatCard = ({ label, value, href, alert }: { label: string; value: number | string; href: string; alert?: boolean }) => (
-  <Link href={href} className={`bg-neutral-900 border ${alert ? 'border-primary' : 'border-neutral-800'} p-5 rounded-lg hover:border-primary transition-colors group`}>
-    <p className="text-neutral-400 text-xs font-bold uppercase tracking-widest">{label}</p>
-    <p className="text-3xl font-bold mt-2 text-white group-hover:text-primary transition-colors tabular-nums">{value}</p>
-  </Link>
-);
+    loadDashboardData();
+  }, []);
 
-export default async function DashboardPage() {
-  const { 
-    recentPosts, 
-    totalPosts, 
-    pendingComments, 
-    unreadMessages, 
-    totalTags, 
-    totalCategories, 
-    health 
-  } = await getDashboardData();
+  if (data.loading) {
+    return <div className="p-6 animate-pulse text-neutral-500 font-mono text-xs">LOADING_SYSTEM_DATA...</div>;
+  }
 
   return (
     <div className="space-y-10 p-6">
@@ -66,12 +55,7 @@ export default async function DashboardPage() {
         <div className="h-1 w-12 bg-primary"></div>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard label="Total Posts" value={totalPosts} href="/posts" />
-        <StatCard label="Messages" value={unreadMessages} href="/messages" alert={unreadMessages > 0} />
-        <StatCard label="Pending Comments" value={pendingComments} href="/comments" alert={pendingComments > 0} />
-        <StatCard label="Total Tags" value={totalTags} href="/tags" />
-      </div>
+      <DashboardStats totalPosts={data.totalPosts} totalTags={data.totalTags} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         <div className="lg:col-span-2 space-y-6">
@@ -92,7 +76,7 @@ export default async function DashboardPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-800">
-                {recentPosts.map((post: Post) => (
+                {data.recentPosts.map((post: Post) => (
                   <tr key={post.id} className="hover:bg-neutral-800/20 group transition-colors">
                     <td className="px-6 py-4">
                       <Link href={`/posts/edit/${post.slug}`} className="font-medium group-hover:text-primary transition-colors">
@@ -110,6 +94,11 @@ export default async function DashboardPage() {
                     </td>
                   </tr>
                 ))}
+                {data.recentPosts.length === 0 && (
+                  <tr>
+                    <td colSpan={3} className="px-6 py-10 text-center text-neutral-600 italic">No recent activity found.</td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -131,7 +120,7 @@ export default async function DashboardPage() {
               </Link>
               <div className="p-3 rounded bg-neutral-900/30 border border-neutral-800 flex justify-between items-center text-xs">
                 <span className="text-neutral-500 uppercase tracking-tighter">Categories</span>
-                <span className="font-mono text-primary font-bold">{totalCategories}</span>
+                <span className="font-mono text-primary font-bold">{data.totalCats}</span>
               </div>
             </div>
           </section>
@@ -142,18 +131,18 @@ export default async function DashboardPage() {
               <div className="flex justify-between items-center">
                 <div className="flex flex-col">
                   <span className="text-xs text-neutral-400 font-mono tracking-tighter uppercase">Express_API</span>
-                  {health.online && (
-                    <span className="text-[9px] text-neutral-600 font-mono">{health.latency}ms latency</span>
+                  {data.health.online && (
+                    <span className="text-[9px] text-neutral-600 font-mono">{data.health.latency}ms latency</span>
                   )}
                 </div>
-                <Badge variant={health.online ? 'success' : 'error'}>
-                  {health.online ? 'Online' : 'Offline'}
+                <Badge variant={data.health.online ? 'success' : 'error'}>
+                  {data.health.online ? 'Online' : 'Offline'}
                 </Badge>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-xs text-neutral-400 font-mono tracking-tighter uppercase">Postgres_DB</span>
-                <Badge variant={health.online ? 'success' : 'warning'}>
-                  {health.online ? 'Active' : 'Unknown'}
+                <Badge variant={data.health.online ? 'success' : 'warning'}>
+                  {data.health.online ? 'Active' : 'Unknown'}
                 </Badge>
               </div>
             </div>

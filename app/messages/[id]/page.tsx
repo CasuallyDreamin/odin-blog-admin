@@ -48,7 +48,7 @@ export default function MessageDetailPage({ params }: { params: Promise<{ id: st
   return (
     <div className="max-w-4xl mx-auto px-6 py-10">
       <div className="mb-8 flex justify-between items-center">
-        <Button variant="outline" onClick={() => router.push('/messages')}>
+        <Button onClick={() => router.push('/messages')}>
           ← Back to Inbox
         </Button>
         <div className="text-sm text-neutral-500">

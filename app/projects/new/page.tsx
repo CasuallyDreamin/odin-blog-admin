@@ -184,7 +184,7 @@ export default function NewProjectPage() {
         </section>
 
         <div className="flex justify-end gap-4 border-t border-neutral-800 pt-6">
-          <Button variant="outline" type="button" onClick={() => router.back()} disabled={loading}>
+          <Button type="button" onClick={() => router.back()} disabled={loading}>
             Discard
           </Button>
           <Button

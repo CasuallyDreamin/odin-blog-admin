@@ -93,7 +93,7 @@ export default function NewThoughtPage() {
         </div>
 
         <div className="flex justify-end gap-3 pt-4 border-t border-neutral-800">
-          <Button variant="outline" type="button" onClick={() => router.back()} disabled={saving}>
+          <Button type="button" onClick={() => router.back()} disabled={saving}>
             Cancel
           </Button>
           <Button type="submit" disabled={saving} className="bg-cyan-600 hover:bg-cyan-500 px-8">

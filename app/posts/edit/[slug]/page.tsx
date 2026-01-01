@@ -69,7 +69,7 @@ export default function EditPostPage() {
         setPublished(postData.published ?? false);
 
         setSelectedCategories((postData.categories || []).map(c => c.id));
-        setSelectedTags((postData.tags || []).map(t => t.id));
+        setSelectedTags((postData.tags || []));
 
       } catch (err: any) {
         console.error('Failed to fetch data:', err);
@@ -159,7 +159,6 @@ export default function EditPostPage() {
             <TextEditor 
               value={content} 
               onChange={setContent} 
-              readOnly={isSubmitting}
             />
         </div>
         

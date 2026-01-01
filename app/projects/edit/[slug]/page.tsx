@@ -101,15 +101,12 @@ export default function EditProject() {
 
     const tempDiv = document.createElement("div");
     tempDiv.innerHTML = content;
-    const firstParagraph = tempDiv.querySelector("p")?.textContent || "";
-    const generatedPreview = firstParagraph.substring(0, 180).trim();
 
     try {
       await updateProject(project.id, {
         title,
         description,
         content,
-        preview: generatedPreview,
         published,
         tagIds: selectedTags,
         categoryIds: selectedCategories,
@@ -200,12 +197,12 @@ export default function EditProject() {
         <section className="flex flex-col gap-2">
           <label className="font-semibold text-cyan-300 uppercase tracking-wider text-sm">Content</label>
           <div className="min-h-[400px] border border-neutral-700 rounded-lg overflow-hidden bg-neutral-800">
-            <TextEditor value={content} onChange={setContent} readOnly={saving} />
+            <TextEditor value={content} onChange={setContent} />
           </div>
         </section>
 
         <div className="flex justify-end gap-4">
-          <Button variant="outline" onClick={() => router.back()} disabled={saving}>
+          <Button onClick={() => router.back()} disabled={saving}>
             Cancel
           </Button>
           <Button 

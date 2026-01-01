@@ -19,6 +19,7 @@ export interface FetchPostsResponse {
 
 export interface CreatePostPayload {
   title: string;
+  content: string;
   layout?: any;
   published?: boolean;
   categoryIds?: string[];
