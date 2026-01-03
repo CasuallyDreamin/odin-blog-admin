@@ -20,7 +20,6 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-        console.log(email, password);
       await api.post("/auth/login", { email, password });
       router.push("/");
     } catch (err: any) {
@@ -36,8 +35,9 @@ export default function LoginPage() {
         <h1 className="admin-login-title">Admin Login</h1>
 
         <div className="admin-login-field">
-          <label>Email</label>
+          <label htmlFor="email">Email</label>
           <input
+            id="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -46,8 +46,9 @@ export default function LoginPage() {
         </div>
 
         <div className="admin-login-field">
-          <label>Password</label>
+          <label htmlFor="password">Password</label>
           <input
+            id="password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}

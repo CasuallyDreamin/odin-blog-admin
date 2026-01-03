@@ -29,28 +29,17 @@ export async function fetchTags({ page = 1, limit = 10, search = "" }: FetchTags
     data: json.tags ?? [],
     total: json.total ?? 0,
     page: json.page ?? page,
-    totalPages: Math.ceil((json.total ?? 0) / limit),
+    totalPages: json.totalPages ?? Math.ceil((json.total ?? 0) / limit),
   } as FetchTagsResponse;
 }
-
 
 export async function getTagById(id: string) {
   const res = await api.get(`/tags/${id}`);
   return res.data as Tag;
 }
 
-export async function getTagBySlug(slug: string) {
-  const res = await api.get(`/tags/slug/${slug}`);
-  return res.data as Tag;
-}
-
 export async function createTag(data: CreateTagPayload) {
   const res = await api.post("/tags", data);
-  return res.data as Tag;
-}
-
-export async function updateTag(id: string, data: Partial<CreateTagPayload>) {
-  const res = await api.put(`/tags/${id}`, data);
   return res.data as Tag;
 }
 

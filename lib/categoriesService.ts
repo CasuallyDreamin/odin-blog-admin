@@ -16,7 +16,6 @@ export interface FetchCategoriesResponse {
 export interface CreateCategoryPayload {
   name: string;
   id?: string;
-  description?: string;
 }
 
 export async function fetchCategories({
