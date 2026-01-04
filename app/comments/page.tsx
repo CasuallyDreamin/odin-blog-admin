@@ -112,7 +112,6 @@ export default function CommentsPage() {
     setPage(1); 
   };
   
-  // --- Table Column Definition ---
   const columns: TableColumn<CommentWithPost>[] = [
     {
       key: 'isApproved',

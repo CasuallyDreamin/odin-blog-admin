@@ -22,15 +22,24 @@ export default function ConfirmDeleteModal({
   return (
     <motion.div 
       className="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+      initial={{ opacity: 0 }} 
+      animate={{ opacity: 1 }}
+      role="presentation"
+      onClick={onCancel}
     >
-      <div className="bg-neutral-900 p-6 rounded w-[350px] border border-neutral-700">
-        <h2 className="text-lg font-semibold text-red-400 mb-4">
+      <div 
+        className="bg-neutral-900 p-6 rounded w-[350px] border border-neutral-700"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 id="modal-title" className="text-lg font-semibold text-red-400 mb-4">
           Delete {itemName}?
         </h2>
 
         <p className="text-gray-300 mb-6">
-          This action cannot be undone.
+          {message || "This action cannot be undone."}
         </p>
 
         <div className="flex justify-end gap-3">
