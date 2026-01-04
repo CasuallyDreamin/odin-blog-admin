@@ -4,7 +4,6 @@ import { afterEach, beforeAll, afterAll, vi } from "vitest";
 import { server } from "./mocks/server";
 import { mockRouter, mockPathname, mockSearchParams } from "./mocks/navigation";
 
-// The directive belongs here to be globally effective
 vi.mock("next/navigation", () => ({
   useRouter: () => mockRouter,
   usePathname: () => mockPathname(),

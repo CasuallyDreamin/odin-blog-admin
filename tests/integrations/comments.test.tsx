@@ -1,61 +1,85 @@
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, waitFor, fireEvent, within } from '@testing-library/react';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import CommentsPage from '@/app/comments/page';
-import { mockComments } from '../mocks/data/comment.mock';
-import * as commentsService from '@/lib/commentsService';
+import { mockCommentList } from '../mocks/data/comment.mock';
 
-vi.mock('next/navigation', () => ({
-  useRouter: () => ({ push: vi.fn() }),
-}));
-
-describe('Comments Integration', () => {
+describe('Comments Comprehensive Integration', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.restoreAllMocks();
   });
 
-  it('renders comments table with author and post title', async () => {
+  it('renders the comments list and handles searching', async () => {
     render(<CommentsPage />);
 
     await waitFor(() => {
-      expect(screen.getByText(mockComments[0].author)).toBeInTheDocument();
+      expect(screen.getByText(mockCommentList.data[0].author)).toBeInTheDocument();
     });
 
-    expect(screen.getByText(mockComments[1].author)).toBeInTheDocument();
-    expect(screen.getByText(/Example Post/i)).toBeInTheDocument();
+    expect(screen.getByText('Bob')).toBeInTheDocument();
+
+    const searchInput = screen.getByPlaceholderText(/search comments or author/i);
+    fireEvent.change(searchInput, { target: { value: 'Alice' } });
+
+    await waitFor(() => {
+      expect(screen.queryByText('Bob')).not.toBeInTheDocument();
+    });
+    expect(screen.getByText('Alice')).toBeInTheDocument();
+  });
+
+  it('filters comments by status', async () => {
+    render(<CommentsPage />);
+
+    await screen.findByText('Alice');
+
+    const pendingBtn = screen.getByRole('button', { name: /^pending$/i });
+    fireEvent.click(pendingBtn);
+
+    await waitFor(() => {
+      expect(screen.queryByText('Alice')).not.toBeInTheDocument();
+    });
     
-    const statusLabels = screen.getAllByText(/Approved|Pending/i);
-    expect(statusLabels.length).toBeGreaterThanOrEqual(2);
+    expect(screen.getByText('Bob')).toBeInTheDocument();
   });
 
   it('toggles comment approval status', async () => {
-    const toggleSpy = vi.spyOn(commentsService, 'setCommentApprovalStatus');
     render(<CommentsPage />);
 
-    await waitFor(() => {
-      expect(screen.getByText(mockComments[1].author)).toBeInTheDocument();
-    });
+    const aliceRow = await screen.findByText('Alice').then(el => el.closest('tr'));
+    const approveBtn = within(aliceRow!).getByRole('button', { name: /unapprove/i });
 
-    const approveButtons = screen.getAllByRole('button', { name: /approve/i });
-    fireEvent.click(approveButtons[0]);
+    fireEvent.click(approveBtn);
 
     await waitFor(() => {
-      expect(toggleSpy).toHaveBeenCalledWith(mockComments[1].id, true);
+      expect(screen.getByText(/pending/i)).toBeInTheDocument();
     });
   });
 
-  it('updates the view when a status filter is clicked', async () => {
-    const fetchSpy = vi.spyOn(commentsService, 'fetchComments');
+  it('handles the full deletion flow via modal', async () => {
     render(<CommentsPage />);
 
+    await screen.findByText('Alice');
+    const aliceRow = screen.getByText('Alice').closest('tr')!;
+    const deleteBtn = within(aliceRow).getByRole('button', { name: /delete/i });
+    fireEvent.click(deleteBtn);
+
+    const modal = await screen.findByRole('dialog');
+    
+    const confirmBtn = within(modal).getByRole('button', { name: /^delete$/i });
+    fireEvent.click(confirmBtn);
+    
     await waitFor(() => {
-      expect(screen.getByText('All')).toBeInTheDocument();
+      expect(screen.queryByText('Alice')).not.toBeInTheDocument();
     });
+  });
 
-    const pendingFilter = screen.getByRole('button', { name: /^pending$/i });
-    fireEvent.click(pendingFilter);
+  it('shows empty state message when no results match', async () => {
+    render(<CommentsPage />);
 
-    expect(fetchSpy).toHaveBeenCalledWith(expect.objectContaining({
-      status: 'pending'
-    }));
+    const searchInput = await screen.findByPlaceholderText(/search comments/i);
+    fireEvent.change(searchInput, { target: { value: 'NonExistentAuthor' } });
+
+    await waitFor(() => {
+      expect(screen.getByText(/no comments found for the current filter/i)).toBeInTheDocument();
+    });
   });
 });

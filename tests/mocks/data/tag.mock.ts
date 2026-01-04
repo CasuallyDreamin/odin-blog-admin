@@ -1,7 +1,18 @@
-import { Tag } from '@/types/tag';
+import { Tag } from "@/types/tag";
 
-export const mockTags: Tag[] = [
-  { id: 'tag-1', name: 'React', posts: [] },
-  { id: 'tag-2', name: 'TypeScript', posts: [] },
-  { id: 'tag-3', name: 'Node.js', posts: [] },
-];
+export const createMockTag = (overrides?: Partial<Tag>): Tag => ({
+  id: 't-1',
+  name: 'React',
+  posts: [
+    { id: 'p-1', title: 'Post One', slug: 'post-one', published: true, createdAt: new Date().toISOString() }
+  ],
+  ...overrides,
+});
+
+export const mockTagList = {
+  data: [
+    createMockTag({ id: 't-1', name: 'React' }),
+    createMockTag({ id: 't-2', name: 'TypeScript', posts: [] }),
+    createMockTag({ id: 't-3', name: 'Node.js' }),
+  ],
+};
