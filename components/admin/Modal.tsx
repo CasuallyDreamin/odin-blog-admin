@@ -31,23 +31,22 @@ export default function Modal({
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          // Click outside listener to close the modal
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              onClose();
-            }
-          }}
-        >
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
           <motion.div
-            className="rounded-xl shadow-2xl w-[90%] max-w-lg p-6"
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            exit={{ scale: 0.8 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            aria-hidden="true"
+            className="fixed inset-0 bg-black bg-opacity-50"
+            data-testid="modal-overlay"
+          />
+
+          <motion.div
+            className="relative rounded-xl shadow-2xl w-[90%] max-w-lg p-6 bg-slate-900 border border-gray-700"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
           >
             {(title) && (
               <div className={`flex items-start justify-between ${title ? 'mb-4' : ''}`}>
@@ -67,7 +66,7 @@ export default function Modal({
             {onConfirm && (
               <div className="flex justify-end gap-2">
                 <button
-                  className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-sm"
+                  className="px-4 py-2 rounded bg-gray-700 hover:bg-gray-600 text-sm text-white"
                   onClick={onClose}
                 >
                   {cancelLabel}
@@ -81,7 +80,7 @@ export default function Modal({
               </div>
             )}
           </motion.div>
-        </motion.div>
+        </div>
       )}
     </AnimatePresence>
   );
