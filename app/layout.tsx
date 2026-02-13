@@ -22,6 +22,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     { label: 'Messages', href: '/messages', icon: null },
     { label: 'Categories', href: '/categories', icon: null },
     { label: 'Tags', href: '/tags', icon: null },
+    { label: 'Media', href: '/media', icon: null },
     { label: 'Settings', href: '/settings', icon: null },
   ];
 
